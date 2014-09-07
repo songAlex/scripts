@@ -1,0 +1,27 @@
+colorscheme wombat
+set guifont=Consolas:h20:cDEFAULT
+
+
+" display format
+set tabstop=4
+set smartindent
+set number
+set textwidth=0 wrapmargin=0 
+set shiftwidth=4
+" no tool bar
+set guioptions-=T
+
+
+" tab
+nmap <C-N>	gt
+nmap <C-P>	gT
+
+
+" path 
+lcd c:/sync/notes
+
+
+" auto correct words
+abbr hte the
+abbr teh the
+abbr adn and
