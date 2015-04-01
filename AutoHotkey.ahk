@@ -71,13 +71,9 @@ return
 ^Numpad9::Run c:\cygwin\Cygwin.bat
 
 
-; for vim only
+; for vim and win
 ; remapping the Esc to Caps
 CapsLock::Esc
-; a better way:
-;classname = ""
-;keystate = ""
-;
 ;*Capslock::
 ;  WinGetClass, classname, A
 ;  if (classname = "Vim")
@@ -109,35 +105,34 @@ else
 	Run "C:\totalcmd\TOTALCMD.EXE"
 return
 
-; keep click
-;#d::
-;   loop, 200
-;   {   click, L, 729, 800
-;       Sleep 10
-;   }
-;Return
-
-
 ; emulate the Filco Mini
 
 ; skip the arrow key
-;^j::Down
-;^k::Up
-;^h::Left
-;^l::Right
-;
-;!j::Delete
-;;!u::Insert
-;!i::Home
-;!k::End
-;!o::PgUp
-;!l::PgDn
+; jkhl, Down Up Left Right
+LAlt & j::
+SetTitleMatchMode 2 
+IfWinActive Google
+;IfWinActive ahk_class MozillaWindowClass
+	Send !j
+else
+	Send {Down}
+return
 
-;LAlt & j:: Send {Down}
-;LAlt & k:: Send {Up}
-;LAlt & h:: Send {Left}
-;LAlt & l:: Send {Right}
-;<!h:: Send {Left}
+LAlt & k:: 
+SetTitleMatchMode 2 
+IfWinActive Google
+	Send !k
+else
+	Send {Up}
+return
+
+; win key supports to max/min the window
+#k::#Up
+#j::#Down
+#h::#Left
+#.::#Right
+;<#l::#Right	;conflict with lock win
+
 <!h::
 IfWinActive ahk_class MozillaWindowClass
 	Send !{Left}
@@ -152,38 +147,16 @@ else
 	Send {Right}
 return
 
-LAlt & m:: Send {Delete}
+; Ins area
+; no use Ins which is never used
 ;Ins::!F4
 <!u::!F4
-;LAlt & u:: Send {Insert}
+LAlt & m:: Send {Delete}
 LAlt & i:: Send {Home}
 LAlt & ,:: Send {End}
 LAlt & o:: Send {PgUp}
 LAlt & .:: Send {PgDn}
 
-
-LAlt & j::
-SetTitleMatchMode 2 
-IfWinActive Google
-;IfWinActive ahk_class MozillaWindowClass
-	Send !j
-else
-	Send {Down}
-return
-LAlt & k:: 
-SetTitleMatchMode 2 
-IfWinActive Google
-	Send !k
-else
-	Send {Up}
-return
-
-; win key supports to move windows
-#k::#Up
-#j::#Down
-#h::#Left
-#.::#Right
-;<#l::#Right
 
 ; mail
 >^Ins::
@@ -194,8 +167,10 @@ else
 	Send {Launch_Mail}
 return
 
-; LButton on key
+
+; RButton on keyboard
 >^AppsKey::RButton
+
 
 ; ! Tab for right hand. no need 
 ;RCtrl & RShift::AltTab
