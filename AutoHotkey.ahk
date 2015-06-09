@@ -9,14 +9,24 @@
 ; sys vars
 ; A_ProgramFiles, C:\Program Files (x86)\
 
+;Filco Fn keys	VK  SC
+;left fn:		EB  07B
+;right fn:		FF  079
+;Kana:			FF  070
+;right shift fn:C1  073
+;back space fn:	FF  07D
+
+; open to trace hotkey, or the code of special keys 
 #KeyHistory
 #InstallKeybdHook
-; path
+
+
+; my path
 notePath = c:\sync\notes\
 workspace = c:\Users\alex.song\workspace\nfc\NfcAppEMV\jni\
 home = c:\cygwin\home\alex.song\
 
-;local vars
+; local vars
 gvim = C:\Vim\vim74\gvim.exe
 ; used files
 ;%notePath%tickets.txt %notePath%\devNotes\EMV_notes.txt 
@@ -26,45 +36,50 @@ sourceFiles = %workspace%apdu.cpp %workspace%apdu.h %workspace%authProtocol.cpp 
 
 firefox = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
 
-; for vim
-vimrc = %home%vimConfig\_vimrc
-gvimrc = %home%vimConfig\_gvimrc
-;gvim = C:\Vim\vim74\gvim.exe -u %vimrc% -U %gvimrc%
-gvim = C:\Vim\vim74\gvim.exe 
 
 ; number pad area
-;^1:: confict with ditto
+; ^1:: confict with ditto
+SC07B & 1::
 ^Numpad1::Run %gvim% -p %editFiles% -c "cd %notePath%"
+
+SC07B & 2::
 ^2::
 ^Numpad2::Run C:\Users\alex.song\Documents\AutoHotkey.ahk
 
+SC07B & 3::
 ^3::
 ^Numpad3::Run C:\Users\alex.song\AppData\Roaming\Baidu\BaiduYun\baiduyun.exe
 
+SC07B & 4::
 ^4::
 ^Numpad4::Run %gvim% -p %sourceFiles% -c "cd %workspace%"
 
-^5::
+^7::
 ^Numpad5::
 Run %firefox% global.bing.com
 return
 
-^6::
+^8::
 ^Numpad6::Run %firefox% www.google.com
-; still no use, to be refined
 
-; conflict with the firefox
-;^0::
 ^Numpad7::
 Run "C:\totalcmd\TOTALCMD.EXE" 
 Run "C:\Users\alex.song\Favorites\Links\Microsoft Outlook 2010.lnk"
 Run %gvim% -p %editFiles% -c "cd %notePath%"
+Run "C:\Users\alex.song\AppData\Local\Youdao\Dict\Application\YodaoDict.exe"
+Run "C:\Program Files (x86)\Tencent\QQIntl\Bin\QQ.exe"
 return
 
-^8::
+^6::
 ^Numpad8::
 ;Run %notePath%\buffer\testing.ahk
-Run "C:\Program Files (x86)\Evernote\Evernote\Evernote.exe"
+IfWinActive ahk_class ENMainFrame
+	WinMinimize
+else
+IfWinExist ahk_class ENMainFrame 
+	WinActivate
+else
+	Run "C:\Program Files (x86)\Evernote\Evernote\Evernote.exe"
 return
 
 ^9::
@@ -92,86 +107,106 @@ CapsLock::Esc
 ;  }
 ;return
 
-; for home ducky keyboard only
-;Ctrl::AppsKey
-
 
 #`::
-; IfWinExist Total Commander (x64) 8.51a - Irdeto Access Technology (Beijing) Co.,Ltd
-; here do not have to be full name of the window.
 IfWinExist Total Commander
 	WinActivate
 else
 	Run "C:\totalcmd\TOTALCMD.EXE"
 return
 
-; emulate the Filco Mini
 
 ; skip the arrow key
 ; jkhl, Down Up Left Right
-LAlt & j::
-SetTitleMatchMode 2 
-IfWinActive Google
-;IfWinActive ahk_class MozillaWindowClass
-	Send !j
-else
-	Send {Down}
-return
+;Filco Japanese layout
+; left Fn key to arrows
+SC07B & j::Send {Down}
+SC07B & k::Send {Up}
+SC07B & h::Send {Left}
+SC07B & l::Send {Right}
 
-LAlt & k:: 
-SetTitleMatchMode 2 
-IfWinActive Google
-	Send !k
-else
-	Send {Up}
-return
+SC07B & d::Send {Down}
+SC07B & e::Send {Up}
+SC07B & s::Send {Left}
+SC07B & f::Send {Right}
 
 ; win key supports to max/min the window
 #k::#Up
 #j::#Down
 #h::#Left
-#.::#Right
 ;<#l::#Right	;conflict with lock win
 
+; !h/l only send the Alt arrow
 <!h::
 IfWinActive ahk_class MozillaWindowClass
 	Send !{Left}
+IfWinActive ahk_class TTOTAL_CMD
+	Send !{Left}
 else
-	Send {Left}
+	Send !h
 return
 
 <!l:: 
 IfWinActive ahk_class MozillaWindowClass
 	Send !{Right}
+IfWinActive ahk_class TTOTAL_CMD
+	Send !{Right}
 else
-	Send {Right}
+	Send !l
 return
 
-; Ins area
-; no use Ins which is never used
-;Ins::!F4
-<!u::!F4
-LAlt & m:: Send {Delete}
-LAlt & i:: Send {Home}
-LAlt & ,:: Send {End}
-LAlt & o:: Send {PgUp}
-LAlt & .:: Send {PgDn}
+; shift help to select 
++!h::Send +{Left}
+^+!h::Send ^+{Left}
++!l::Send +{Right}
+^+!l::Send ^+{Right}
+; Shift up down
++!j::Send +{Down}
++!k::Send +{Up}
+
+; emulate Ins area
+SC07B & u::Send !{F4}
+SC07B & m:: Send {Delete}
+SC07B & i:: Send {Home}
+SC07B & ,:: Send {End}
+SC07B & o:: Send {PgUp}
+SC07B & .:: Send {PgDn}
 
 
-; mail
+; mail, outlook
 >^Ins::
+SC073::
 SetTitleMatchMode 2 
+IfWinActive Microsoft Outlook
+	WinMinimize
+else
 IfWinExist Microsoft Outlook
 	WinActivate
 else
 	Send {Launch_Mail}
 return
 
+; ! Tab for right hand. no need 
+;RCtrl & RShift::AltTab
 
+
+; no mouse op
+; LButton on keyboard
+Ins::LButton
 ; RButton on keyboard
 >^AppsKey::RButton
 
 
-; ! Tab for right hand. no need 
-;RCtrl & RShift::AltTab
+; left Fn key act as the Alt
+; only for one tab 
+SC07B & Tab::AltTab
+
+
+; Kana for input switch
+SC070::Send ^{Space}
+
+
+; zoom
+SC07B & -::Send ^{WheelDown}
+SC07B & =::Send ^{WheelUp}
 
