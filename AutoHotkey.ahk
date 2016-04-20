@@ -17,22 +17,27 @@
 ;back space fn:	FF  07D
 
 ; open to trace hotkey, or the code of special keys 
-#KeyHistory
-#InstallKeybdHook
+;#KeyHistory
+;#InstallKeybdHook
 
 
 ; my path
 notePath = c:\sync\notes\
 workspace = c:\Users\alex.song\workspace\nfc\NfcAppEMV\jni\
+workspaceMs =c:\work\MP\MasterCard\sdkNative\jni\
+workspaceMsMerge =c:\work\MP\MasterCard\Merge\mcbp-android\jni\
 home = c:\cygwin\home\alex.song\
 
 ; local vars
-gvim = C:\Vim\vim74\gvim.exe
+gvim = cmd /c start /max C:\Vim\vim74\gvim.exe
 ; used files
 ;%notePath%tickets.txt %notePath%\devNotes\EMV_notes.txt 
-editFiles = %notePath%DailyLog_2015.txt %notePath%gVimNote.txt c:\cygwin\home\alex.song\vimfiles\vimrc C:\Users\alex.song\Documents\AutoHotkey.ahk 
+;%notePath%gVimNote.txt c:\cygwin\home\alex.song\vimfiles\vimrc C:\Users\alex.song\Documents\AutoHotkey.ahk 
+editFiles = %notePath%DailyLog_2016.txt 
 
 sourceFiles = %workspace%apdu.cpp %workspace%apdu.h %workspace%authProtocol.cpp %workspace%authProtocol.h %workspace%mpAgent-jni.c %workspace%../protocol.txt
+sourceFilesMs = %workspaceMs%Android.mk %workspaceMs%src\iac\sc.cpp %workspaceMs%src\iac\sc.h %workspaceMs%src/wrappers/android_wrapper.cpp %workspaceMs%src/wrappers/android_wrapper.h %workspaceMs%src/iac/LdeNative.h
+sourceFilesMsMerge = %workspaceMsMerge%Android.mk %workspaceMsMerge%databaseTest/databaseTest.cpp %workspaceMsMerge%src\utils\crypto_factory.cpp %workspaceMsMerge%src\core\mcm\mcm_lite_services.cpp %workspaceMsMerge%src\mcbp\dataBase\MCBPDataBaseImpl.cpp %workspaceMsMerge%src\mcbp\dataBase\MCBPDataBaseImpl.h  %workspaceMsMerge%src/wrappers/android_wrapper.cpp %workspaceMsMerge%src/wrappers/android_wrapper.h %workspaceMsMerge%src\mcbp\dataBase\LdeNative.h 
 
 firefox = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
 
@@ -50,9 +55,20 @@ SC07B & 3::
 ^3::
 ^Numpad3::Run C:\Users\alex.song\AppData\Roaming\Baidu\BaiduYun\baiduyun.exe
 
-SC07B & 4::
+SC07B & 4::Run %gvim% -p %sourceFilesMs% -c "cd %workspaceMs%"
+
+SC07B & 5::Run %gvim% -p %sourceFilesMsMerge% -c "cd %workspaceMsMerge%"
+ 
 ^4::
-^Numpad4::Run %gvim% -p %sourceFiles% -c "cd %workspace%"
+IfWinActive CTerm
+	WinMinimize
+else
+IfWinExist CTerm
+	WinActivate
+else
+^Numpad4::Run "C:\tools\cterm-3.6.3\CTerm\CTerm.exe"
+;^Numpad4::Run %gvim% -p %sourceFiles% -c "cd %workspace%"
+return
 
 ^7::
 ^Numpad5::
@@ -67,7 +83,7 @@ Run "C:\totalcmd\TOTALCMD.EXE"
 Run "C:\Users\alex.song\Favorites\Links\Microsoft Outlook 2010.lnk"
 Run %gvim% -p %editFiles% -c "cd %notePath%"
 Run "C:\Users\alex.song\AppData\Local\Youdao\Dict\Application\YodaoDict.exe"
-Run "C:\Program Files (x86)\Tencent\QQIntl\Bin\QQ.exe"
+;Run "C:\Program Files (x86)\Tencent\QQIntl\Bin\QQ.exe"
 return
 
 ^6::
@@ -125,16 +141,17 @@ SC07B & k::Send {Up}
 SC07B & h::Send {Left}
 SC07B & l::Send {Right}
 
-SC07B & d::Send {Down}
-SC07B & e::Send {Up}
-SC07B & s::Send {Left}
-SC07B & f::Send {Right}
+SC07B & s::Send {Down}
+SC07B & w::Send {Up}
+SC07B & a::Send {Left}
+SC07B & d::Send {Right}
 
 ; win key supports to max/min the window
 #k::#Up
 #j::#Down
 #h::#Left
 ;<#l::#Right	;conflict with lock win
+<#.::#Right	;conflict with lock win
 
 ; !h/l only send the Alt arrow
 <!h::
@@ -174,7 +191,7 @@ SC07B & .:: Send {PgDn}
 
 
 ; mail, outlook
->^Ins::
+;>^Ins::
 SC073::
 SetTitleMatchMode 2 
 IfWinActive Microsoft Outlook
@@ -210,3 +227,23 @@ SC070::Send ^{Space}
 SC07B & -::Send ^{WheelDown}
 SC07B & =::Send ^{WheelUp}
 
+; use the 07D
+SC07D::Send {$}
+
+; use Pause to alt + F4
+Pause::Send !{F4}
+
+
+; reuse the right Fn to Win
+;SC079::Send {RWin}
+SC079 & Left::Send #{Left}
+SC079 & Right::Send #{Right}
+SC079 & Up::Send #{Up}
+SC079 & Down::Send #{Down}
+
+; switch tabs
+#IfWinActive ahk_class MozillaWindowClass
+{
+   ^p::Send ^{PgUp}
+   ^n::Send ^{PgDn}
+}
