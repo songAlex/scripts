@@ -26,10 +26,10 @@ notePath = c:\sync\notes\
 workspace = c:\Users\alex.song\workspace\nfc\NfcAppEMV\jni\
 workspaceMs =c:\work\MP\MasterCard\sdkNative\jni\
 workspaceMsMerge =c:\work\MP\MasterCard\Merge\mcbp-android\jni\
-home = c:\cygwin\home\alex.song\
+home = c:\cygwin64\home\songjie5\
 
 ; local vars
-gvim = cmd /c start /max C:\Vim\vim74\gvim.exe
+gvim = cmd /c start /max C:\Vim\vim80\gvim.exe
 ; used files
 ;%notePath%tickets.txt %notePath%\devNotes\EMV_notes.txt 
 ;%notePath%gVimNote.txt c:\cygwin\home\alex.song\vimfiles\vimrc C:\Users\alex.song\Documents\AutoHotkey.ahk 
@@ -45,7 +45,8 @@ firefox = "C:\Program Files (x86)\Mozilla Firefox\firefox.exe"
 ; number pad area
 ; ^1:: confict with ditto
 SC07B & 1::
-^Numpad1::Run %gvim% -p %editFiles% -c "cd %notePath%"
+^1::Run %gvim%
+;^Numpad1::Run %gvim% -p %editFiles% -c "cd %notePath%"
 
 SC07B & 2::
 ^2::
